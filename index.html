@@ -377,48 +377,201 @@
         };
 
         let RECIPES = {
+            // --- SCIENCE PACKS (ALL 12) ---
             'Automation Science Pack': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Copper Plate': 1, 'Iron Gear Wheel': 1 } },
             'Logistic Science Pack': { time: 6, yield: 1, category: 'crafting', ingredients: { 'Inserter': 1, 'Transport Belt': 1 } },
-            'Chemical Science Pack': { time: 24, yield: 2, category: 'crafting', ingredients: { 'Engine Unit': 1, 'Advanced Circuit': 1, 'Sulfur': 1 } },
-            'Metallurgical Science Pack': { time: 15, yield: 1, category: 'foundry', ingredients: { 'Calcite': 1, 'Copper Plate': 2, 'Iron Plate': 4 } },
-            'Electromagnetic Science Pack': { time: 15, yield: 1, category: 'electromagnetics', ingredients: { 'Superconductor': 1, 'Processing Unit': 1, 'Accumulator': 1 } },
-            'Agricultural Science Pack': { time: 15, yield: 1, category: 'biochamber', ingredients: { 'Yumako Mash': 2, 'Jelly': 2 } },
-            'Cryogenic Science Pack': { time: 20, yield: 1, category: 'cryogenics', ingredients: { 'Ice': 5, 'Lithium': 1, 'Processing Unit': 1 } },
-            'Promethium Science Pack': { time: 30, yield: 1, category: 'crafting', ingredients: { 'Promethium Asteroid Chunk': 1, 'Quantum Processor': 1 } },
+            'Military Science Pack': { time: 10, yield: 2, category: 'crafting', ingredients: { 'Piercing Rounds Magazine': 1, 'Grenade': 1, 'Wall': 2 } },
+            'Chemical Science Pack': { time: 24, yield: 2, category: 'crafting', ingredients: { 'Engine Unit': 2, 'Advanced Circuit': 3, 'Sulfur': 1 } },
+            'Production Science Pack': { time: 21, yield: 3, category: 'crafting', ingredients: { 'Electric Furnace': 1, 'Productivity Module 1': 1, 'Rail': 30 } },
+            'Utility Science Pack': { time: 21, yield: 3, category: 'crafting', ingredients: { 'Low Density Structure': 3, 'Processing Unit': 2, 'Flying Robot Frame': 1 } },
+            'Space Science Pack': { time: 15, yield: 5, category: 'crafting', ingredients: { 'Iron Plate': 2, 'Carbon': 1, 'Ice': 1 } },
+            'Metallurgical Science Pack': { time: 14, yield: 1, category: 'foundry', ingredients: { 'Tungsten Carbide': 3, 'Tungsten Plate': 2, 'Molten Copper': 200 } },
+            'Electromagnetic Science Pack': { time: 10, yield: 1, category: 'electromagnetics', ingredients: { 'Supercapacitor': 1, 'Accumulator': 1, 'Electrolyte': 25, 'Holmium Solution': 25 } },
+            'Agricultural Science Pack': { time: 4, yield: 1, category: 'biochamber', ingredients: { 'Bioflux': 1, 'Pentapod Egg': 1 } },
+            'Cryogenic Science Pack': { time: 20, yield: 1, category: 'cryogenics', ingredients: { 'Lithium Plate': 3, 'Ice': 6, 'Fluoroketone (Cold)': 6 } },
+            'Promethium Science Pack': { time: 5, yield: 10, category: 'cryogenics', ingredients: { 'Promethium Asteroid Chunk': 25, 'Quantum Processor': 1, 'Biter Egg': 10 } },
+
+            // --- BASIC & INTERMEDIATE PRODUCTS ---
+            'Iron Plate': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Iron Ore': 1 } },
+            'Copper Plate': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Copper Ore': 1 } },
+            'Steel Plate': { time: 16, yield: 1, category: 'smelting', ingredients: { 'Iron Plate': 5 } },
+            'Stone Brick': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Stone': 2 } },
             'Iron Gear Wheel': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 2 } },
-            'Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 1, 'Iron Gear Wheel': 1, 'Iron Plate': 1 } },
-            'Transport Belt': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Iron Gear Wheel': 1, 'Iron Plate': 1 } },
-            'Electronic Circuit': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Copper Cable': 3, 'Iron Plate': 1 } },
+            'Iron Stick': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Iron Plate': 1 } },
             'Copper Cable': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Copper Plate': 1 } },
+            'Pipe': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 1 } },
+            'Pipe to Ground': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Pipe': 10, 'Iron Plate': 5 } },
+            'Electronic Circuit': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Copper Cable': 3, 'Iron Plate': 1 } },
             'Advanced Circuit': { time: 6, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 2, 'Plastic Bar': 2, 'Copper Cable': 4 } },
             'Processing Unit': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 20, 'Advanced Circuit': 2, 'Sulfuric Acid': 5 } },
             'Engine Unit': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 1, 'Pipe': 2, 'Steel Plate': 1 } },
-            'Pipe': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 1 } },
-            'Steel Plate': { time: 16, yield: 1, category: 'smelting', ingredients: { 'Iron Plate': 5 } },
+            'Electric Engine Unit': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Engine Unit': 1, 'Lubricant': 15, 'Electronic Circuit': 2 } },
+            'Flying Robot Frame': { time: 20, yield: 1, category: 'crafting', ingredients: { 'Electric Engine Unit': 1, 'Battery': 2, 'Steel Plate': 1, 'Electronic Circuit': 3 } },
+            'Low Density Structure': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Copper Plate': 20, 'Steel Plate': 2, 'Plastic Bar': 5 } },
+            'Rocket Fuel': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Solid Fuel': 10, 'Light Oil': 10 } },
+            'Rocket Part': { time: 3, yield: 1, category: 'rocket', ingredients: { 'Processing Unit': 1, 'Low Density Structure': 1, 'Rocket Fuel': 1 } },
+            'Satellite': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Low Density Structure': 100, 'Solar Panel': 100, 'Accumulator': 100, 'Radar': 5, 'Processing Unit': 100, 'Rocket Fuel': 50 } },
+            'Barrel': { time: 1, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 1 } },
+
+            // --- OIL, CHEMISTRY & FLUIDS ---
             'Plastic Bar': { time: 1, yield: 2, category: 'chemistry', ingredients: { 'Petroleum Gas': 20, 'Coal': 1 } },
             'Sulfur': { time: 1, yield: 2, category: 'chemistry', ingredients: { 'Water': 30, 'Petroleum Gas': 30 } },
-            'Superconductor': { time: 10, yield: 1, category: 'electromagnetics', ingredients: { 'Holmium Plate': 2, 'Copper Cable': 5, 'Plastic Bar': 2 } },
-            'Quantum Processor': { time: 15, yield: 1, category: 'electromagnetics', ingredients: { 'Processing Unit': 1, 'Superconductor': 2, 'Calcite': 1 } },
-            'Holmium Plate': { time: 5, yield: 1, category: 'foundry', ingredients: { 'Holmium Ore': 2 } },
-            'Yumako Mash': { time: 4, yield: 2, category: 'biochamber', ingredients: { 'Yumako Fruit': 1 } },
-            'Jelly': { time: 4, yield: 2, category: 'biochamber', ingredients: { 'Jellynut': 1 } },
-            'Accumulator': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 2, 'Battery': 1 } },
+            'Sulfuric Acid': { time: 1, yield: 50, category: 'chemistry', ingredients: { 'Sulfur': 5, 'Iron Plate': 1, 'Water': 100 } },
             'Battery': { time: 4, yield: 1, category: 'chemistry', ingredients: { 'Copper Plate': 1, 'Iron Plate': 1, 'Sulfuric Acid': 20 } },
-            'Iron Plate': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Iron Ore': 1 } },
-            'Copper Plate': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Copper Ore': 1 } },
+            'Explosives': { time: 4, yield: 2, category: 'chemistry', ingredients: { 'Sulfur': 1, 'Coal': 1, 'Water': 10 } },
+            'Lubricant': { time: 1, yield: 10, category: 'chemistry', ingredients: { 'Heavy Oil': 10 } },
+            'Solid Fuel': { time: 1, yield: 1, category: 'chemistry', ingredients: { 'Light Oil': 10 } },
+            'Petroleum Gas': { time: 5, yield: 55, category: 'oil', ingredients: { 'Crude Oil': 100, 'Water': 50 } },
+            'Light Oil': { time: 5, yield: 45, category: 'oil', ingredients: { 'Crude Oil': 100, 'Water': 50 } },
+            'Heavy Oil': { time: 5, yield: 25, category: 'oil', ingredients: { 'Crude Oil': 100, 'Water': 50 } },
+
+            // --- LOGISTICS & BELTS ---
+            'Transport Belt': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Iron Gear Wheel': 1, 'Iron Plate': 1 } },
+            'Fast Transport Belt': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 5, 'Transport Belt': 1 } },
+            'Express Transport Belt': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 10, 'Fast Transport Belt': 1, 'Lubricant': 20 } },
+            'Turbo Transport Belt': { time: 0.5, yield: 1, category: 'foundry', ingredients: { 'Tungsten Plate': 5, 'Express Transport Belt': 1, 'Lubricant': 20 } },
+            'Underground Belt': { time: 1, yield: 2, category: 'crafting', ingredients: { 'Iron Plate': 10, 'Transport Belt': 5 } },
+            'Fast Underground Belt': { time: 2, yield: 2, category: 'crafting', ingredients: { 'Iron Gear Wheel': 40, 'Underground Belt': 2 } },
+            'Express Underground Belt': { time: 2, yield: 2, category: 'crafting', ingredients: { 'Iron Gear Wheel': 80, 'Fast Underground Belt': 2, 'Lubricant': 40 } },
+            'Turbo Underground Belt': { time: 2, yield: 2, category: 'foundry', ingredients: { 'Tungsten Plate': 40, 'Express Underground Belt': 2, 'Lubricant': 40 } },
+            'Splitter': { time: 1, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 5, 'Iron Plate': 5, 'Transport Belt': 4 } },
+            'Fast Splitter': { time: 2, yield: 1, category: 'crafting', ingredients: { 'Splitter': 1, 'Iron Gear Wheel': 10, 'Electronic Circuit': 10 } },
+            'Express Splitter': { time: 2, yield: 1, category: 'crafting', ingredients: { 'Fast Splitter': 1, 'Iron Gear Wheel': 10, 'Advanced Circuit': 10, 'Lubricant': 80 } },
+            'Turbo Splitter': { time: 2, yield: 1, category: 'foundry', ingredients: { 'Express Splitter': 1, 'Tungsten Plate': 15, 'Processing Unit': 2, 'Lubricant': 80 } },
+            'Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 1, 'Iron Gear Wheel': 1, 'Iron Plate': 1 } },
+            'Long-Handed Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 1, 'Iron Plate': 1, 'Inserter': 1 } },
+            'Fast Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 2, 'Iron Plate': 2, 'Inserter': 1 } },
+            'Bulk Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 15, 'Electronic Circuit': 15, 'Advanced Circuit': 1, 'Fast Inserter': 1 } },
+            'Stack Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Bulk Inserter': 1, 'Processing Unit': 1, 'Carbon Fiber': 2, 'Jelly': 5 } },
+            'Logistic Robot': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Flying Robot Frame': 1, 'Advanced Circuit': 2 } },
+            'Construction Robot': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Flying Robot Frame': 1, 'Electronic Circuit': 2 } },
+            'Roboport': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 45, 'Iron Gear Wheel': 45, 'Advanced Circuit': 45 } },
+            'Rail': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Stone': 1, 'Iron Stick': 1, 'Steel Plate': 1 } },
+            'Concrete': { time: 10, yield: 10, category: 'crafting', ingredients: { 'Stone Brick': 5, 'Iron Ore': 1, 'Water': 100 } },
+            'Refined Concrete': { time: 15, yield: 10, category: 'crafting', ingredients: { 'Concrete': 20, 'Iron Stick': 8, 'Steel Plate': 1, 'Water': 100 } },
+
+            // --- PRODUCTION BUILDINGS & POWER ---
+            'Assembling Machine 1': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 3, 'Iron Gear Wheel': 5, 'Iron Plate': 9 } },
+            'Assembling Machine 2': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 2, 'Electronic Circuit': 3, 'Iron Gear Wheel': 5, 'Assembling Machine 1': 1 } },
+            'Assembling Machine 3': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Speed Module 1': 4, 'Assembling Machine 2': 2 } },
+            'Electric Furnace': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 10, 'Advanced Circuit': 5, 'Stone Brick': 10 } },
+            'Chemical Plant': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 5, 'Iron Gear Wheel': 5, 'Electronic Circuit': 5, 'Pipe': 5 } },
+            'Oil Refinery': { time: 8, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 15, 'Iron Gear Wheel': 10, 'Stone Brick': 10, 'Electronic Circuit': 10, 'Pipe': 10 } },
+            'Centrifuge': { time: 4, yield: 1, category: 'crafting', ingredients: { 'Concrete': 100, 'Steel Plate': 50, 'Advanced Circuit': 100, 'Iron Gear Wheel': 100 } },
+            'Beacon': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 20, 'Advanced Circuit': 20, 'Steel Plate': 10, 'Copper Cable': 10 } },
+            'Solar Panel': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 5, 'Electronic Circuit': 15, 'Copper Plate': 5 } },
+            'Accumulator': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 2, 'Battery': 5 } },
+            'Nuclear Reactor': { time: 8, yield: 1, category: 'crafting', ingredients: { 'Concrete': 500, 'Steel Plate': 500, 'Advanced Circuit': 500, 'Copper Plate': 500 } },
+            'Heat Exchanger': { time: 3, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 10, 'Copper Plate': 100, 'Pipe': 10 } },
+            'Heat Pipe': { time: 1, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 10, 'Copper Plate': 20 } },
+            'Steam Turbine': { time: 3, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 50, 'Copper Plate': 50, 'Pipe': 20 } },
+            'Uranium Fuel Cell': { time: 10, yield: 10, category: 'crafting', ingredients: { 'Iron Plate': 10, 'Uranium-235': 1, 'Uranium-238': 19 } },
+            'Uranium-235': { time: 12, yield: 0.007, category: 'centrifuge', ingredients: { 'Uranium Ore': 10 } },
+            'Uranium-238': { time: 12, yield: 0.993, category: 'centrifuge', ingredients: { 'Uranium Ore': 10 } },
+
+            // --- MODULES ---
+            'Speed Module 1': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 5, 'Advanced Circuit': 5 } },
+            'Speed Module 2': { time: 30, yield: 1, category: 'crafting', ingredients: { 'Speed Module 1': 4, 'Advanced Circuit': 5, 'Processing Unit': 5 } },
+            'Speed Module 3': { time: 60, yield: 1, category: 'crafting', ingredients: { 'Speed Module 2': 4, 'Advanced Circuit': 5, 'Processing Unit': 5, 'Tungsten Carbide': 1 } },
+            'Productivity Module 1': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 5, 'Advanced Circuit': 5 } },
+            'Productivity Module 2': { time: 30, yield: 1, category: 'crafting', ingredients: { 'Productivity Module 1': 4, 'Advanced Circuit': 5, 'Processing Unit': 5 } },
+            'Productivity Module 3': { time: 60, yield: 1, category: 'crafting', ingredients: { 'Productivity Module 2': 4, 'Advanced Circuit': 5, 'Processing Unit': 5, 'Biter Egg': 1 } },
+            'Efficiency Module 1': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 5, 'Advanced Circuit': 5 } },
+            'Efficiency Module 2': { time: 30, yield: 1, category: 'crafting', ingredients: { 'Efficiency Module 1': 4, 'Advanced Circuit': 5, 'Processing Unit': 5 } },
+            'Efficiency Module 3': { time: 60, yield: 1, category: 'crafting', ingredients: { 'Efficiency Module 2': 4, 'Advanced Circuit': 5, 'Processing Unit': 5, 'Spoilage': 5 } },
+            'Quality Module 1': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 5, 'Advanced Circuit': 5 } },
+            'Quality Module 2': { time: 30, yield: 1, category: 'crafting', ingredients: { 'Quality Module 1': 4, 'Advanced Circuit': 5, 'Processing Unit': 5 } },
+            'Quality Module 3': { time: 60, yield: 1, category: 'crafting', ingredients: { 'Quality Module 2': 4, 'Advanced Circuit': 5, 'Processing Unit': 5, 'Superconductor': 1 } },
+
+            // --- MILITARY & SPACE PLATFORMS ---
+            'Firearm Magazine': { time: 1, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 4 } },
+            'Piercing Rounds Magazine': { time: 3, yield: 1, category: 'crafting', ingredients: { 'Firearm Magazine': 1, 'Steel Plate': 1, 'Copper Plate': 5 } },
+            'Uranium Rounds Magazine': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Piercing Rounds Magazine': 1, 'Uranium-238': 1 } },
+            'Grenade': { time: 8, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 5, 'Coal': 10 } },
+            'Wall': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Stone Brick': 5 } },
+            'Gun Turret': { time: 8, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 10, 'Copper Plate': 10, 'Iron Plate': 20 } },
+            'Laser Turret': { time: 20, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 20, 'Electronic Circuit': 20, 'Battery': 12 } },
+            'Radar': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 5, 'Iron Gear Wheel': 5, 'Iron Plate': 10 } },
+            'Space Platform Foundation': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 20, 'Copper Cable': 20 } },
+            'Asteroid Collector': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Low Density Structure': 20, 'Electric Engine Unit': 8, 'Processing Unit': 5 } },
+            'Crusher': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Low Density Structure': 20, 'Steel Plate': 10, 'Electric Engine Unit': 10 } },
+            'Thruster': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 10, 'Processing Unit': 10, 'Electric Engine Unit': 5 } },
+            'Thruster Fuel': { time: 2, yield: 30, category: 'chemistry', ingredients: { 'Carbon': 2, 'Water': 10 } },
+            'Thruster Oxidizer': { time: 2, yield: 30, category: 'chemistry', ingredients: { 'Iron Ore': 2, 'Water': 10 } },
+
+            // --- SPACE AGE: VULCANUS (FOUNDRY & METALLURGY) ---
+            'Foundry': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Tungsten Carbide': 50, 'Steel Plate': 50, 'Electronic Circuit': 30, 'Refined Concrete': 20, 'Lubricant': 20 } },
+            'Big Mining Drill': { time: 30, yield: 1, category: 'foundry', ingredients: { 'Tungsten Carbide': 20, 'Electric Engine Unit': 10, 'Advanced Circuit': 10, 'Molten Iron': 200 } },
+            'Molten Iron': { time: 32, yield: 500, category: 'foundry', ingredients: { 'Iron Ore': 50, 'Calcite': 1 } },
+            'Molten Copper': { time: 32, yield: 500, category: 'foundry', ingredients: { 'Copper Ore': 50, 'Calcite': 1 } },
+            'Tungsten Carbide': { time: 1, yield: 1, category: 'crafting', ingredients: { 'Tungsten Ore': 2, 'Carbon': 1, 'Sulfuric Acid': 10 } },
+            'Tungsten Plate': { time: 10, yield: 1, category: 'foundry', ingredients: { 'Tungsten Ore': 4, 'Molten Iron': 10 } },
+            'Artillery Shell': { time: 15, yield: 1, category: 'crafting', ingredients: { 'Radar': 1, 'Calcite': 1, 'Tungsten Plate': 4, 'Explosives': 8 } },
+
+            // --- SPACE AGE: FULGORA (ELECTROMAGNETICS & SCRAP) ---
+            'Electromagnetic Plant': { time: 10, yield: 1, category: 'electromagnetics', ingredients: { 'Holmium Plate': 150, 'Steel Plate': 50, 'Processing Unit': 50, 'Refined Concrete': 50 } },
+            'Recycler': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Processing Unit': 6, 'Steel Plate': 20, 'Iron Gear Wheel': 40, 'Concrete': 20 } },
+            'Lightning Rod': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Copper Cable': 8, 'Steel Plate': 4, 'Stone Brick': 4 } },
+            'Lightning Collector': { time: 5, yield: 1, category: 'electromagnetics', ingredients: { 'Lightning Rod': 1, 'Supercapacitor': 8, 'Accumulator': 1 } },
+            'Holmium Solution': { time: 10, yield: 100, category: 'chemistry', ingredients: { 'Holmium Ore': 2, 'Stone': 1, 'Water': 10 } },
+            'Holmium Plate': { time: 1, yield: 1, category: 'foundry', ingredients: { 'Holmium Solution': 20 } },
+            'Electrolyte': { time: 5, yield: 10, category: 'electromagnetics', ingredients: { 'Heavy Oil': 10, 'Holmium Solution': 10, 'Stone': 1 } },
+            'Superconductor': { time: 5, yield: 2, category: 'electromagnetics', ingredients: { 'Holmium Plate': 1, 'Copper Plate': 1, 'Plastic Bar': 1, 'Light Oil': 5 } },
+            'Supercapacitor': { time: 10, yield: 1, category: 'electromagnetics', ingredients: { 'Battery': 1, 'Electronic Circuit': 4, 'Superconductor': 2, 'Holmium Plate': 2, 'Electrolyte': 10 } },
+            'Tesla Turret': { time: 30, yield: 1, category: 'electromagnetics', ingredients: { 'Supercapacitor': 10, 'Processing Unit': 10, 'Holmium Plate': 30, 'Electrolyte': 100 } },
+
+            // --- SPACE AGE: GLEBA (BIOCHAMBER & AGRICULTURE) ---
+            'Biochamber': { time: 20, yield: 1, category: 'crafting', ingredients: { 'Nutrients': 5, 'Iron Plate': 20, 'Electronic Circuit': 5, 'Pentapod Egg': 1, 'Landfill': 1 } },
+            'Agricultural Tower': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 10, 'Electronic Circuit': 3, 'Spoilage': 20, 'Landfill': 1 } },
+            'Yumako Mash': { time: 1, yield: 2, category: 'biochamber', ingredients: { 'Yumako Fruit': 1 } },
+            'Jelly': { time: 1, yield: 4, category: 'biochamber', ingredients: { 'Jellynut': 1 } },
+            'Bioflux': { time: 6, yield: 4, category: 'biochamber', ingredients: { 'Yumako Mash': 15, 'Jelly': 12 } },
+            'Nutrients': { time: 2, yield: 40, category: 'biochamber', ingredients: { 'Bioflux': 5 } },
+            'Carbon Fiber': { time: 5, yield: 1, category: 'biochamber', ingredients: { 'Yumako Mash': 10, 'Carbon': 1 } },
+            'Biolubricant': { time: 3, yield: 20, category: 'biochamber', ingredients: { 'Jelly': 60 } },
+            'Bioplastic': { time: 2, yield: 3, category: 'biochamber', ingredients: { 'Bioflux': 1, 'Yumako Mash': 4 } },
+            'Biosulfur': { time: 2, yield: 2, category: 'biochamber', ingredients: { 'Spoilage': 5, 'Bioflux': 1 } },
+            'Rocket Turret': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Rocket Launcher': 4, 'Processing Unit': 4, 'Steel Plate': 20, 'Iron Gear Wheel': 20, 'Carbon Fiber': 20 } },
+            'Rocket Launcher': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 5, 'Iron Gear Wheel': 5, 'Electronic Circuit': 5 } },
+            'Landfill': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Stone': 50 } },
+
+            // --- SPACE AGE: AQUILO & ENDGAME (CRYOGENICS & FUSION) ---
+            'Cryogenic Plant': { time: 10, yield: 1, category: 'cryogenics', ingredients: { 'Refined Concrete': 40, 'Superconductor': 20, 'Processing Unit': 20, 'Lithium Plate': 20 } },
+            'Lithium': { time: 20, yield: 5, category: 'cryogenics', ingredients: { 'Lithium Brine': 50, 'Ammonia': 50, 'Holmium Plate': 1 } },
+            'Lithium Plate': { time: 6.4, yield: 1, category: 'smelting', ingredients: { 'Lithium': 1 } },
+            'Ammonia': { time: 1, yield: 50, category: 'chemistry', ingredients: { 'Ammoniacal Solution': 50 } },
+            'Fluoroketone (Hot)': { time: 10, yield: 50, category: 'cryogenics', ingredients: { 'Fluorine': 50, 'Ammonia': 50, 'Solid Fuel': 1, 'Lithium': 1 } },
+            'Fluoroketone (Cold)': { time: 5, yield: 50, category: 'cryogenics', ingredients: { 'Fluoroketone (Hot)': 50 } },
+            'Quantum Processor': { time: 10, yield: 1, category: 'electromagnetics', ingredients: { 'Tungsten Carbide': 1, 'Processing Unit': 1, 'Superconductor': 1, 'Carbon Fiber': 1, 'Lithium Plate': 2, 'Fluoroketone (Cold)': 10 } },
+            'Fusion Reactor': { time: 30, yield: 1, category: 'cryogenics', ingredients: { 'Tungsten Plate': 200, 'Superconductor': 200, 'Quantum Processor': 250, 'Refined Concrete': 200 } },
+            'Fusion Generator': { time: 30, yield: 1, category: 'cryogenics', ingredients: { 'Tungsten Plate': 100, 'Supercapacitor': 100, 'Quantum Processor': 50, 'Pipe': 100 } },
+            'Fusion Power Cell': { time: 10, yield: 1, category: 'cryogenics', ingredients: { 'Lithium Plate': 5, 'Holmium Plate': 1, 'Ammonia': 100 } },
+            'Railgun Turret': { time: 20, yield: 1, category: 'crafting', ingredients: { 'Quantum Processor': 20, 'Tungsten Plate': 50, 'Supercapacitor': 20, 'Carbon Fiber': 30 } },
+            'Railgun Ammo': { time: 25, yield: 1, category: 'crafting', ingredients: { 'Steel Plate': 5, 'Copper Cable': 10, 'Explosives': 2 } },
+
+            // --- RAW & BASE RESOURCES (LEAF NODES) ---
             'Iron Ore': null,
             'Copper Ore': null,
             'Coal': null,
+            'Stone': null,
+            'Uranium Ore': null,
+            'Crude Oil': null,
+            'Water': null,
             'Calcite': null,
+            'Tungsten Ore': null,
             'Holmium Ore': null,
+            'Scrap': null,
             'Yumako Fruit': null,
             'Jellynut': null,
+            'Pentapod Egg': null,
+            'Biter Egg': null,
+            'Spoilage': null,
+            'Carbon': null,
             'Ice': null,
-            'Lithium': null,
             'Promethium Asteroid Chunk': null,
-            'Petroleum Gas': null,
-            'Water': null,
-            'Sulfuric Acid': null
+            'Ammoniacal Solution': null,
+            'Lithium Brine': null,
+            'Fluorine': null
         };
 
         let stepConfigs = {};
@@ -500,11 +653,32 @@
         function getCustomRecipesOnly() {
             const custom = {};
             const standardKeys = [
-                'Automation Science Pack', 'Logistic Science Pack', 'Chemical Science Pack', 'Metallurgical Science Pack',
+                'Automation Science Pack', 'Logistic Science Pack', 'Military Science Pack', 'Chemical Science Pack',
+                'Production Science Pack', 'Utility Science Pack', 'Space Science Pack', 'Metallurgical Science Pack',
                 'Electromagnetic Science Pack', 'Agricultural Science Pack', 'Cryogenic Science Pack', 'Promethium Science Pack',
-                'Iron Gear Wheel', 'Inserter', 'Transport Belt', 'Electronic Circuit', 'Copper Cable', 'Advanced Circuit',
-                'Processing Unit', 'Engine Unit', 'Pipe', 'Steel Plate', 'Plastic Bar', 'Sulfur', 'Superconductor',
-                'Quantum Processor', 'Holmium Plate', 'Yumako Mash', 'Jelly', 'Accumulator', 'Battery', 'Iron Plate', 'Copper Plate'
+                'Iron Plate', 'Copper Plate', 'Steel Plate', 'Stone Brick', 'Iron Gear Wheel', 'Iron Stick', 'Copper Cable',
+                'Pipe', 'Pipe to Ground', 'Electronic Circuit', 'Advanced Circuit', 'Processing Unit', 'Engine Unit',
+                'Electric Engine Unit', 'Flying Robot Frame', 'Low Density Structure', 'Rocket Fuel', 'Rocket Part', 'Satellite',
+                'Barrel', 'Plastic Bar', 'Sulfur', 'Sulfuric Acid', 'Battery', 'Explosives', 'Lubricant', 'Solid Fuel',
+                'Petroleum Gas', 'Light Oil', 'Heavy Oil', 'Transport Belt', 'Fast Transport Belt', 'Express Transport Belt',
+                'Turbo Transport Belt', 'Underground Belt', 'Fast Underground Belt', 'Express Underground Belt', 'Turbo Underground Belt',
+                'Splitter', 'Fast Splitter', 'Express Splitter', 'Turbo Splitter', 'Inserter', 'Long-Handed Inserter',
+                'Fast Inserter', 'Bulk Inserter', 'Stack Inserter', 'Logistic Robot', 'Construction Robot', 'Roboport', 'Rail',
+                'Concrete', 'Refined Concrete', 'Assembling Machine 1', 'Assembling Machine 2', 'Assembling Machine 3',
+                'Electric Furnace', 'Chemical Plant', 'Oil Refinery', 'Centrifuge', 'Beacon', 'Solar Panel', 'Accumulator',
+                'Nuclear Reactor', 'Heat Exchanger', 'Heat Pipe', 'Steam Turbine', 'Uranium Fuel Cell', 'Uranium-235',
+                'Uranium-238', 'Speed Module 1', 'Speed Module 2', 'Speed Module 3', 'Productivity Module 1',
+                'Productivity Module 2', 'Productivity Module 3', 'Efficiency Module 1', 'Efficiency Module 2',
+                'Efficiency Module 3', 'Quality Module 1', 'Quality Module 2', 'Quality Module 3', 'Firearm Magazine',
+                'Piercing Rounds Magazine', 'Uranium Rounds Magazine', 'Grenade', 'Wall', 'Gun Turret', 'Laser Turret',
+                'Radar', 'Space Platform Foundation', 'Asteroid Collector', 'Crusher', 'Thruster', 'Thruster Fuel',
+                'Thruster Oxidizer', 'Foundry', 'Big Mining Drill', 'Molten Iron', 'Molten Copper', 'Tungsten Carbide',
+                'Tungsten Plate', 'Artillery Shell', 'Electromagnetic Plant', 'Recycler', 'Lightning Rod', 'Lightning Collector',
+                'Holmium Solution', 'Holmium Plate', 'Electrolyte', 'Superconductor', 'Supercapacitor', 'Tesla Turret',
+                'Biochamber', 'Agricultural Tower', 'Yumako Mash', 'Jelly', 'Bioflux', 'Nutrients', 'Carbon Fiber',
+                'Biolubricant', 'Bioplastic', 'Biosulfur', 'Rocket Turret', 'Rocket Launcher', 'Landfill', 'Cryogenic Plant',
+                'Lithium', 'Lithium Plate', 'Ammonia', 'Fluoroketone (Hot)', 'Fluoroketone (Cold)', 'Quantum Processor',
+                'Fusion Reactor', 'Fusion Generator', 'Fusion Power Cell', 'Railgun Turret', 'Railgun Ammo'
             ];
             for (let k in RECIPES) {
                 if (!standardKeys.includes(k) && RECIPES[k] !== null) {
@@ -600,6 +774,7 @@
                 case 'oil': return 'oil-refinery';
                 case 'centrifuge': return 'centrifuge';
                 case 'smelting': return 'electric-furnace';
+                case 'rocket': return 'rocket-silo';
                 default: return 'assembling-machine-3';
             }
         }
@@ -661,12 +836,15 @@
             }
         };
 
-        function buildSolverTree(itemName, requiredRate, qualityTier) {
+        function buildSolverTree(itemName, requiredRate, qualityTier, visited = new Set()) {
             const recipe = RECIPES[itemName];
 
-            if (!recipe || !recipe.ingredients) {
+            if (!recipe || !recipe.ingredients || visited.has(itemName)) {
                 return { itemName, requiredRate, isRaw: true };
             }
+
+            const nextVisited = new Set(visited);
+            nextVisited.add(itemName);
 
             const defaultMachineKey = getDefaultMachineForCategory(recipe.category);
             const defaultMachineDef = MACHINES[defaultMachineKey];
@@ -747,7 +925,7 @@
             const children = [];
             for (const [ingName, ingQty] of Object.entries(recipe.ingredients)) {
                 const ingRatePerSec = (machinesNeeded * ingQty) / recipe.time;
-                children.push(buildSolverTree(ingName, ingRatePerSec, qualityTier));
+                children.push(buildSolverTree(ingName, ingRatePerSec, qualityTier, nextVisited));
             }
 
             return {
