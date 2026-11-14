@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorio 2.0 & Space Age Factory Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        factorio: {
+                            dark: '#1b1d1e',
+                            panel: '#242729',
+                            border: '#3c4043',
+                            orange: '#e58e26',
+                            orangeHover: '#f59e0b',
+                            accent: '#4580b0',
+                            green: '#2ecc71',
+                            red: '#e74c3c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #121314;
+            color: #d1d5db;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1b1d1e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3c4043;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e58e26;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased text-gray-200">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-factorio-panel border-b border-factorio-border sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-factorio-orange text-gray-950 p-2 rounded-lg font-black text-xl tracking-wider flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-gear fa-spin" style="animation-duration: 10s;"></i>
+                    FACTORIO 2.0
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white leading-tight">Space Age Production Planner</h1>
+                    <p class="text-xs text-gray-400">Recipes, Modules, Beacons, Planet Presets & Quality Engine</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 flex-wrap">
+                <!-- Unit Switcher -->
+                <div class="bg-factorio-dark p-1 rounded-lg border border-factorio-border flex items-center text-sm">
+                    <button id="unit-sec" onclick="setUnit('sec')" class="px-3 py-1 rounded-md font-medium transition-all bg-factorio-orange text-gray-950 shadow">/ sec</button>
+                    <button id="unit-min" onclick="setUnit('min')" class="px-3 py-1 rounded-md font-medium text-gray-400 hover:text-white transition-all">/ min</button>
+                </div>
+
+                <!-- Live Collaboration Session Copy Link -->
+                <button onclick="copySessionLink()" id="copy-session-btn" class="bg-factorio-orange text-gray-950 font-bold hover:bg-factorio-orangeHover px-3 py-1.5 rounded-lg text-sm flex items-center gap-2 transition-all shadow">
+                    <i class="fa-solid fa-share-nodes"></i> <span id="copy-btn-text">Copy Session Link</span>
+                </button>
+
+                <!-- Custom Recipe Modal Button -->
+                <button onclick="openCustomRecipeModal()" class="bg-factorio-dark border border-factorio-border hover:border-factorio-orange text-gray-200 px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-plus text-factorio-orange"></i> Custom Recipe
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- DASHBOARD SUMMARY -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-factorio-panel p-4 rounded-xl border border-factorio-border shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-amber-500/10 text-amber-500 rounded-lg text-2xl">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Power Required</div>
+                    <div id="stat-power" class="text-xl font-bold text-white">0 MW</div>
+                </div>
+            </div>
+
+            <div class="bg-factorio-panel p-4 rounded-xl border border-factorio-border shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-blue-500/10 text-blue-400 rounded-lg text-2xl">
+                    <i class="fa-solid fa-industry"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Total Machines</div>
+                    <div id="stat-machines" class="text-xl font-bold text-white">0</div>
+                </div>
+            </div>
+
+            <div class="bg-factorio-panel p-4 rounded-xl border border-factorio-border shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-lg text-2xl">
+                    <i class="fa-solid fa-vector-square"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Factory Footprint</div>
+                    <div id="stat-footprint" class="text-xl font-bold text-white">0 tiles</div>
+                </div>
+            </div>
+
+            <div class="bg-factorio-panel p-4 rounded-xl border border-factorio-border shadow-sm flex items-center gap-4">
+                <div class="p-3 bg-purple-500/10 text-purple-400 rounded-lg text-2xl">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Unique Raw Materials</div>
+                    <div id="stat-raw-count" class="text-xl font-bold text-white">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TARGET CONFIGURATION & PLANET FILTER -->
+        <section class="bg-factorio-panel rounded-xl border border-factorio-border p-5 shadow-sm space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-4 pb-3 border-b border-factorio-border">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye text-factorio-orange"></i> Production Goal Configurator
+                </h2>
+                <!-- Planet Selection Filter -->
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-400">Planet Preset Context:</span>
+                    <select id="planet-filter" onchange="updatePlanetFilter()" class="bg-factorio-dark border border-factorio-border text-gray-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-factorio-orange">
+                        <option value="Nauvis">Nauvis (Standard 2.0)</option>
+                        <option value="Vulcanus">Vulcanus (Foundries & Calcite)</option>
+                        <option value="Fulgora">Fulgora (EM Plants & Recyclers)</option>
+                        <option value="Gleba">Gleba (Biochambers & Organics)</option>
+                        <option value="Aquilo">Aquilo (Cryogenics & Fusion)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Select Recipe -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Target Output Item</label>
+                    <select id="target-item" onchange="recalculate()" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <!-- Desired Rate -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Required Output Rate (<span class="unit-label">items/s</span>)</label>
+                    <input type="number" id="target-rate" value="10" min="0.1" step="0.5" oninput="recalculate()" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                </div>
+
+                <!-- Target Quality -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Target Machine Quality Tier</label>
+                    <select id="target-quality" onchange="recalculate()" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                        <option value="Normal">Normal (x1.0)</option>
+                        <option value="Uncommon">Uncommon (x1.3 speed)</option>
+                        <option value="Rare">Rare (x1.6 speed)</option>
+                        <option value="Epic">Epic (x1.9 speed)</option>
+                        <option value="Legendary">Legendary (x2.5 speed)</option>
+                    </select>
+                </div>
+
+                <!-- Search / Filter Quick Pick -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Search Recipe</label>
+                    <input type="text" id="search-recipe" placeholder="Filter item list..." oninput="filterRecipeOptions()" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN LAYOUT GRID: TREE / BREAKDOWN & RAW INPUTS -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- LEFT: PRODUCTION HIERARCHY / RECIPE CONFIGURATOR (2 Cols) -->
+            <section class="lg:col-span-2 space-y-4">
+                <div class="bg-factorio-panel rounded-xl border border-factorio-border p-5 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sitemap text-factorio-orange"></i> Production Tree & Machine Setup
+                        </h3>
+                        <span class="text-xs text-gray-400">Granular per-slot machine & beacon module configuration</span>
+                    </div>
+
+                    <!-- Tree Container -->
+                    <div id="production-tree" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT: SUMMARY TABLES & RAW MATERIALS (1 Col) -->
+            <section class="space-y-6">
+                <!-- Raw Materials Box -->
+                <div class="bg-factorio-panel rounded-xl border border-factorio-border p-5 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-factorio-border pb-3">
+                        <i class="fa-solid fa-cubes text-factorio-orange"></i> Total Raw Inputs
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-300">
+                            <thead class="text-xs uppercase bg-factorio-dark text-gray-400">
+                                <tr>
+                                    <th class="px-3 py-2 rounded-l-md">Item</th>
+                                    <th class="px-3 py-2 text-right rounded-r-md">Required Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="raw-inputs-table" class="divide-y divide-factorio-border">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Machine & Energy Breakdown Box -->
+                <div class="bg-factorio-panel rounded-xl border border-factorio-border p-5 shadow-sm space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2 border-b border-factorio-border pb-3">
+                        <i class="fa-solid fa-microchip text-factorio-orange"></i> Machines Breakdown
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-gray-300">
+                            <thead class="text-xs uppercase bg-factorio-dark text-gray-400">
+                                <tr>
+                                    <th class="px-3 py-2 rounded-l-md">Machine Type</th>
+                                    <th class="px-3 py-2 text-center">Qty</th>
+                                    <th class="px-3 py-2 text-right rounded-r-md">Power</th>
+                                </tr>
+                            </thead>
+                            <tbody id="machines-summary-table" class="divide-y divide-factorio-border">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- CUSTOM RECIPE MODAL -->
+    <div id="custom-recipe-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-factorio-panel border border-factorio-border rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-factorio-border pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-flask text-factorio-orange"></i> Add Custom Recipe
+                </h3>
+                <button onclick="closeCustomRecipeModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Recipe / Item Name</label>
+                    <input type="text" id="cr-name" placeholder="e.g., Quantum Processor Tier 2" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Crafting Time (s)</label>
+                        <input type="number" id="cr-time" value="1.0" step="0.1" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">Yield Output Count</label>
+                        <input type="number" id="cr-yield" value="1" min="1" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Category / Machine</label>
+                    <select id="cr-category" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                        <option value="crafting">Crafting (Assemblers)</option>
+                        <option value="chemistry">Chemistry</option>
+                        <option value="foundry">Foundry (Vulcanus)</option>
+                        <option value="electromagnetics">Electromagnetics (Fulgora)</option>
+                        <option value="biochamber">Biochamber (Gleba)</option>
+                        <option value="cryogenics">Cryogenics (Aquilo)</option>
+                        <option value="centrifuge">Centrifuge</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Ingredients (Format: Item Name:Qty, Item Name:Qty)</label>
+                    <input type="text" id="cr-ingredients" placeholder="e.g., Iron Plate:2, Electronic Circuit:5" class="w-full bg-factorio-dark border border-factorio-border text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-factorio-orange">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t border-factorio-border">
+                <button onclick="closeCustomRecipeModal()" class="px-4 py-2 rounded-lg text-sm bg-factorio-dark hover:bg-gray-800 text-gray-300">Cancel</button>
+                <button onclick="saveCustomRecipe()" class="px-4 py-2 rounded-lg text-sm bg-factorio-orange hover:bg-factorio-orangeHover text-gray-950 font-bold">Save Recipe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP SCRIPT ENGINE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'factorio-calculator-shared';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "demo",
+            authDomain: "demo.firebaseapp.com",
+            projectId: "demo",
+            storageBucket: "demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:demo"
+        };
+
+        let db = null;
+        let auth = null;
+        let isRemoteUpdate = false;
+        let sessionId = getSessionIdFromUrl() || generateSessionId();
+
+        // Data Structures & State Variables
+        window.currentUnit = 'sec';
+
+        const QUALITY_TIERS = {
+            'Normal': { speedMult: 1.0, moduleMult: 1.0 },
+            'Uncommon': { speedMult: 1.3, moduleMult: 1.3 },
+            'Rare': { speedMult: 1.6, moduleMult: 1.6 },
+            'Epic': { speedMult: 1.9, moduleMult: 1.9 },
+            'Legendary': { speedMult: 2.5, moduleMult: 2.5 }
+        };
+
+        const MACHINES = {
+            'assembling-machine-1': { name: 'Assembling Machine 1', speed: 0.5, power: 75, slots: 0, footprint: 9, category: 'crafting' },
+            'assembling-machine-2': { name: 'Assembling Machine 2', speed: 0.75, power: 150, slots: 2, footprint: 9, category: 'crafting' },
+            'assembling-machine-3': { name: 'Assembling Machine 3', speed: 1.25, power: 375, slots: 4, footprint: 9, category: 'crafting' },
+            'foundry': { name: 'Foundry (Vulcanus)', speed: 4.0, power: 2500, slots: 4, footprint: 25, category: 'foundry' },
+            'electromagnetic-plant': { name: 'Electromagnetic Plant (Fulgora)', speed: 2.0, power: 2000, slots: 5, footprint: 16, category: 'electromagnetics' },
+            'biochamber': { name: 'Biochamber (Gleba)', speed: 2.0, power: 500, slots: 4, footprint: 9, category: 'biochamber' },
+            'cryogenic-plant': { name: 'Cryogenic Plant (Aquilo)', speed: 2.0, power: 1500, slots: 3, footprint: 25, category: 'cryogenics' },
+            'chemical-plant': { name: 'Chemical Plant', speed: 1.0, power: 210, slots: 3, footprint: 9, category: 'chemistry' },
+            'oil-refinery': { name: 'Oil Refinery', speed: 1.0, power: 420, slots: 3, footprint: 25, category: 'oil' },
+            'centrifuge': { name: 'Centrifuge', speed: 1.0, power: 350, slots: 2, footprint: 9, category: 'centrifuge' },
+            'electric-furnace': { name: 'Electric Furnace', speed: 2.0, power: 180, slots: 2, footprint: 9, category: 'smelting' },
+            'rocket-silo': { name: 'Rocket Silo', speed: 1.0, power: 4000, slots: 4, footprint: 81, category: 'rocket' }
+        };
+
+        const MODULE_TYPES = {
+            'none': { name: 'None', speed: 0, prod: 0, energy: 0, quality: 0 },
+            'speed-1': { name: 'Speed Module 1', speed: 0.20, prod: 0, energy: 0.50, quality: 0 },
+            'speed-2': { name: 'Speed Module 2', speed: 0.30, prod: 0, energy: 0.60, quality: 0 },
+            'speed-3': { name: 'Speed Module 3', speed: 0.50, prod: 0, energy: 0.70, quality: 0 },
+            'prod-1': { name: 'Productivity 1', speed: -0.05, prod: 0.04, energy: 0.40, quality: 0 },
+            'prod-2': { name: 'Productivity 2', speed: -0.10, prod: 0.06, energy: 0.60, quality: 0 },
+            'prod-3': { name: 'Productivity 3', speed: -0.15, prod: 0.10, energy: 0.80, quality: 0 },
+            'eff-1': { name: 'Efficiency 1', speed: 0, prod: 0, energy: -0.30, quality: 0 },
+            'eff-2': { name: 'Efficiency 2', speed: 0, prod: 0, energy: -0.40, quality: 0 },
+            'eff-3': { name: 'Efficiency 3', speed: 0, prod: 0, energy: -0.50, quality: 0 },
+            'qual-1': { name: 'Quality Module 1', speed: -0.05, prod: 0, energy: 0.10, quality: 0.01 },
+            'qual-2': { name: 'Quality Module 2', speed: -0.05, prod: 0, energy: 0.10, quality: 0.025 },
+            'qual-3': { name: 'Quality Module 3', speed: -0.05, prod: 0, energy: 0.10, quality: 0.025 }
+        };
+
+        const BEACONS = {
+            'none': { name: 'No Beacon', slots: 0, profile: [0] },
+            'beacon-sa': { name: 'Space Age Beacon', slots: 2, profile: [1.0, 0.75, 0.55, 0.38, 0.26, 0.18, 0.12, 0.08] }
+        };
+
+        let RECIPES = {
+            'Automation Science Pack': { time: 5, yield: 1, category: 'crafting', ingredients: { 'Copper Plate': 1, 'Iron Gear Wheel': 1 } },
+            'Logistic Science Pack': { time: 6, yield: 1, category: 'crafting', ingredients: { 'Inserter': 1, 'Transport Belt': 1 } },
+            'Chemical Science Pack': { time: 24, yield: 2, category: 'crafting', ingredients: { 'Engine Unit': 1, 'Advanced Circuit': 1, 'Sulfur': 1 } },
+            'Metallurgical Science Pack': { time: 15, yield: 1, category: 'foundry', ingredients: { 'Calcite': 1, 'Copper Plate': 2, 'Iron Plate': 4 } },
+            'Electromagnetic Science Pack': { time: 15, yield: 1, category: 'electromagnetics', ingredients: { 'Superconductor': 1, 'Processing Unit': 1, 'Accumulator': 1 } },
+            'Agricultural Science Pack': { time: 15, yield: 1, category: 'biochamber', ingredients: { 'Yumako Mash': 2, 'Jelly': 2 } },
+            'Cryogenic Science Pack': { time: 20, yield: 1, category: 'cryogenics', ingredients: { 'Ice': 5, 'Lithium': 1, 'Processing Unit': 1 } },
+            'Promethium Science Pack': { time: 30, yield: 1, category: 'crafting', ingredients: { 'Promethium Asteroid Chunk': 1, 'Quantum Processor': 1 } },
+            'Iron Gear Wheel': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 2 } },
+            'Inserter': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 1, 'Iron Gear Wheel': 1, 'Iron Plate': 1 } },
+            'Transport Belt': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Iron Gear Wheel': 1, 'Iron Plate': 1 } },
+            'Electronic Circuit': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Copper Cable': 3, 'Iron Plate': 1 } },
+            'Copper Cable': { time: 0.5, yield: 2, category: 'crafting', ingredients: { 'Copper Plate': 1 } },
+            'Advanced Circuit': { time: 6, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 2, 'Plastic Bar': 2, 'Copper Cable': 4 } },
+            'Processing Unit': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Electronic Circuit': 20, 'Advanced Circuit': 2, 'Sulfuric Acid': 5 } },
+            'Engine Unit': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Iron Gear Wheel': 1, 'Pipe': 2, 'Steel Plate': 1 } },
+            'Pipe': { time: 0.5, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 1 } },
+            'Steel Plate': { time: 16, yield: 1, category: 'smelting', ingredients: { 'Iron Plate': 5 } },
+            'Plastic Bar': { time: 1, yield: 2, category: 'chemistry', ingredients: { 'Petroleum Gas': 20, 'Coal': 1 } },
+            'Sulfur': { time: 1, yield: 2, category: 'chemistry', ingredients: { 'Water': 30, 'Petroleum Gas': 30 } },
+            'Superconductor': { time: 10, yield: 1, category: 'electromagnetics', ingredients: { 'Holmium Plate': 2, 'Copper Cable': 5, 'Plastic Bar': 2 } },
+            'Quantum Processor': { time: 15, yield: 1, category: 'electromagnetics', ingredients: { 'Processing Unit': 1, 'Superconductor': 2, 'Calcite': 1 } },
+            'Holmium Plate': { time: 5, yield: 1, category: 'foundry', ingredients: { 'Holmium Ore': 2 } },
+            'Yumako Mash': { time: 4, yield: 2, category: 'biochamber', ingredients: { 'Yumako Fruit': 1 } },
+            'Jelly': { time: 4, yield: 2, category: 'biochamber', ingredients: { 'Jellynut': 1 } },
+            'Accumulator': { time: 10, yield: 1, category: 'crafting', ingredients: { 'Iron Plate': 2, 'Battery': 1 } },
+            'Battery': { time: 4, yield: 1, category: 'chemistry', ingredients: { 'Copper Plate': 1, 'Iron Plate': 1, 'Sulfuric Acid': 20 } },
+            'Iron Plate': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Iron Ore': 1 } },
+            'Copper Plate': { time: 3.2, yield: 1, category: 'smelting', ingredients: { 'Copper Ore': 1 } },
+            'Iron Ore': null,
+            'Copper Ore': null,
+            'Coal': null,
+            'Calcite': null,
+            'Holmium Ore': null,
+            'Yumako Fruit': null,
+            'Jellynut': null,
+            'Ice': null,
+            'Lithium': null,
+            'Promethium Asteroid Chunk': null,
+            'Petroleum Gas': null,
+            'Water': null,
+            'Sulfuric Acid': null
+        };
+
+        let stepConfigs = {};
+
+        function getSessionIdFromUrl() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#session=')) {
+                return hash.replace('#session=', '');
+            }
+            return null;
+        }
+
+        function generateSessionId() {
+            return Math.random().toString(36).substring(2, 10);
+        }
+
+        // Initialize Firebase Session
+        async function initRealtimeSync() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                window.location.hash = `session=${sessionId}`;
+
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', sessionId);
+                onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        isRemoteUpdate = true;
+                        
+                        if (data.targetItem) document.getElementById('target-item').value = data.targetItem;
+                        if (data.targetRate) document.getElementById('target-rate').value = data.targetRate;
+                        if (data.targetQuality) document.getElementById('target-quality').value = data.targetQuality;
+                        if (data.planetFilter) document.getElementById('planet-filter').value = data.planetFilter;
+                        if (data.stepConfigs) stepConfigs = data.stepConfigs;
+                        if (data.customRecipes) {
+                            RECIPES = { ...RECIPES, ...data.customRecipes };
+                            populateTargetSelector();
+                            if (data.targetItem) document.getElementById('target-item').value = data.targetItem;
+                        }
+                        
+                        recalculate(false);
+                        isRemoteUpdate = false;
+                    }
+                }, (err) => console.error("Firestore sync error:", err));
+            } catch (err) {
+                console.warn("Real-time collaborative sync unavailable:", err);
+            }
+        }
+
+        async function syncToFirebase() {
+            if (isRemoteUpdate || !db || !auth.currentUser) return;
+
+            const sessionData = {
+                targetItem: document.getElementById('target-item').value,
+                targetRate: document.getElementById('target-rate').value,
+                targetQuality: document.getElementById('target-quality').value,
+                planetFilter: document.getElementById('planet-filter').value,
+                stepConfigs: stepConfigs,
+                customRecipes: getCustomRecipesOnly(),
+                updatedAt: Date.now()
+            };
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', sessionId);
+                await setDoc(docRef, sessionData, { merge: true });
+            } catch (err) {
+                console.error("Error pushing session updates:", err);
+            }
+        }
+
+        function getCustomRecipesOnly() {
+            const custom = {};
+            const standardKeys = [
+                'Automation Science Pack', 'Logistic Science Pack', 'Chemical Science Pack', 'Metallurgical Science Pack',
+                'Electromagnetic Science Pack', 'Agricultural Science Pack', 'Cryogenic Science Pack', 'Promethium Science Pack',
+                'Iron Gear Wheel', 'Inserter', 'Transport Belt', 'Electronic Circuit', 'Copper Cable', 'Advanced Circuit',
+                'Processing Unit', 'Engine Unit', 'Pipe', 'Steel Plate', 'Plastic Bar', 'Sulfur', 'Superconductor',
+                'Quantum Processor', 'Holmium Plate', 'Yumako Mash', 'Jelly', 'Accumulator', 'Battery', 'Iron Plate', 'Copper Plate'
+            ];
+            for (let k in RECIPES) {
+                if (!standardKeys.includes(k) && RECIPES[k] !== null) {
+                    custom[k] = RECIPES[k];
+                }
+            }
+            return custom;
+        }
+
+        window.copySessionLink = function() {
+            const shareUrl = `${window.location.origin}${window.location.pathname}#session=${sessionId}`;
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = shareUrl;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            const btnText = document.getElementById('copy-btn-text');
+            btnText.innerText = "Copied!";
+            setTimeout(() => { btnText.innerText = "Copy Session Link"; }, 2000);
+        };
+
+        window.onload = function() {
+            populateTargetSelector();
+            recalculate(false);
+            initRealtimeSync();
+        };
+
+        window.setUnit = function(unit) {
+            window.currentUnit = unit;
+            document.getElementById('unit-sec').className = unit === 'sec' ? 
+                "px-3 py-1 rounded-md font-medium transition-all bg-factorio-orange text-gray-950 shadow" : 
+                "px-3 py-1 rounded-md font-medium text-gray-400 hover:text-white transition-all";
+            document.getElementById('unit-min').className = unit === 'min' ? 
+                "px-3 py-1 rounded-md font-medium transition-all bg-factorio-orange text-gray-950 shadow" : 
+                "px-3 py-1 rounded-md font-medium text-gray-400 hover:text-white transition-all";
+            
+            document.querySelectorAll('.unit-label').forEach(el => {
+                el.innerText = unit === 'sec' ? 'items/s' : 'items/min';
+            });
+            recalculate();
+        };
+
+        window.populateTargetSelector = function() {
+            const select = document.getElementById('target-item');
+            const currentVal = select.value;
+            select.innerHTML = '';
+            
+            const craftableKeys = Object.keys(RECIPES).filter(k => RECIPES[k] !== null).sort();
+            craftableKeys.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.innerText = item;
+                select.appendChild(opt);
+            });
+            if (currentVal && RECIPES[currentVal]) {
+                select.value = currentVal;
+            } else {
+                select.value = "Electromagnetic Science Pack";
+            }
+        };
+
+        window.filterRecipeOptions = function() {
+            const query = document.getElementById('search-recipe').value.toLowerCase();
+            const select = document.getElementById('target-item');
+            Array.from(select.options).forEach(opt => {
+                opt.style.display = opt.value.toLowerCase().includes(query) ? '' : 'none';
+            });
+        };
+
+        window.updatePlanetFilter = function() {
+            const planet = document.getElementById('planet-filter').value;
+            if(planet === 'Vulcanus') {
+                document.getElementById('target-item').value = 'Metallurgical Science Pack';
+            } else if(planet === 'Fulgora') {
+                document.getElementById('target-item').value = 'Electromagnetic Science Pack';
+            } else if(planet === 'Gleba') {
+                document.getElementById('target-item').value = 'Agricultural Science Pack';
+            } else if(planet === 'Aquilo') {
+                document.getElementById('target-item').value = 'Cryogenic Science Pack';
+            }
+            recalculate();
+        };
+
+        function getDefaultMachineForCategory(cat) {
+            switch(cat) {
+                case 'foundry': return 'foundry';
+                case 'electromagnetics': return 'electromagnetic-plant';
+                case 'biochamber': return 'biochamber';
+                case 'cryogenics': return 'cryogenic-plant';
+                case 'chemistry': return 'chemical-plant';
+                case 'oil': return 'oil-refinery';
+                case 'centrifuge': return 'centrifuge';
+                case 'smelting': return 'electric-furnace';
+                default: return 'assembling-machine-3';
+            }
+        }
+
+        function createDefaultMachineSlots(slotCount, defaultModule = 'prod-3', defaultQuality = 'Normal') {
+            const slots = [];
+            for (let i = 0; i < slotCount; i++) {
+                slots.push({ type: defaultModule, quality: defaultQuality });
+            }
+            return slots;
+        }
+
+        function createDefaultBeaconSlots(slotCount, defaultModule = 'speed-3', defaultQuality = 'Normal') {
+            const slots = [];
+            for (let i = 0; i < slotCount; i++) {
+                slots.push({ type: defaultModule, quality: defaultQuality });
+            }
+            return slots;
+        }
+
+        window.recalculate = function(triggerSync = true) {
+            const targetItem = document.getElementById('target-item').value;
+            let targetRate = parseFloat(document.getElementById('target-rate').value) || 0;
+            if (window.currentUnit === 'min') targetRate /= 60;
+
+            const quality = document.getElementById('target-quality').value;
+
+            const treeRoot = buildSolverTree(targetItem, targetRate, quality);
+            
+            const totals = {
+                rawInputs: {},
+                machines: {},
+                totalPowerKW: 0,
+                totalFootprint: 0,
+                totalMachineCount: 0
+            };
+
+            const treeContainer = document.getElementById('production-tree');
+            treeContainer.innerHTML = '';
+            
+            if (treeRoot) {
+                renderTreeNode(treeRoot, treeContainer, totals);
+            }
+
+            renderRawInputs(totals.rawInputs);
+            renderMachinesSummary(totals.machines);
+
+            const powerDisplay = totals.totalPowerKW > 10000 ? 
+                (totals.totalPowerKW / 1000).toFixed(2) + ' MW' : 
+                Math.round(totals.totalPowerKW) + ' kW';
+            
+            document.getElementById('stat-power').innerText = powerDisplay;
+            document.getElementById('stat-machines').innerText = totals.totalMachineCount.toFixed(1);
+            document.getElementById('stat-footprint').innerText = Math.ceil(totals.totalFootprint) + ' tiles';
+            document.getElementById('stat-raw-count').innerText = Object.keys(totals.rawInputs).length;
+
+            if (triggerSync) {
+                syncToFirebase();
+            }
+        };
+
+        function buildSolverTree(itemName, requiredRate, qualityTier) {
+            const recipe = RECIPES[itemName];
+
+            if (!recipe || !recipe.ingredients) {
+                return { itemName, requiredRate, isRaw: true };
+            }
+
+            const defaultMachineKey = getDefaultMachineForCategory(recipe.category);
+            const defaultMachineDef = MACHINES[defaultMachineKey];
+
+            if (!stepConfigs[itemName]) {
+                stepConfigs[itemName] = {
+                    machine: defaultMachineKey,
+                    machineSlots: createDefaultMachineSlots(defaultMachineDef.slots, 'prod-3', 'Normal'),
+                    beacon: 'none',
+                    beaconCount: 0,
+                    beaconSlots: createDefaultBeaconSlots(2, 'speed-3', 'Normal')
+                };
+            }
+
+            const cfg = stepConfigs[itemName];
+            const machineStats = MACHINES[cfg.machine] || MACHINES['assembling-machine-3'];
+            const qualityStats = QUALITY_TIERS[qualityTier] || QUALITY_TIERS['Normal'];
+
+            if (!cfg.machineSlots || cfg.machineSlots.length !== machineStats.slots) {
+                cfg.machineSlots = createDefaultMachineSlots(machineStats.slots, 'prod-3', 'Normal');
+            }
+
+            let totalProd = 0;
+            let totalMachineSpeedMod = 0;
+            let totalMachineEnergyMod = 0;
+            let totalQualityMod = 0;
+
+            cfg.machineSlots.forEach(slot => {
+                if (slot.type && slot.type !== 'none') {
+                    const modDef = MODULE_TYPES[slot.type] || MODULE_TYPES['none'];
+                    const qMult = (QUALITY_TIERS[slot.quality] || QUALITY_TIERS['Normal']).moduleMult;
+
+                    totalProd += (modDef.prod * qMult);
+                    totalMachineSpeedMod += (modDef.speed * qMult);
+                    totalMachineEnergyMod += (modDef.energy);
+                    totalQualityMod += (modDef.quality * qMult);
+                }
+            });
+
+            let totalBeaconSpeedMod = 0;
+            let totalBeaconEnergyMod = 0;
+
+            if (cfg.beacon !== 'none' && cfg.beaconCount > 0) {
+                const beaconDef = BEACONS[cfg.beacon];
+                let singleBeaconSpeed = 0;
+                let singleBeaconEnergy = 0;
+
+                cfg.beaconSlots.forEach(bSlot => {
+                    if (bSlot.type && bSlot.type !== 'none') {
+                        const bModDef = MODULE_TYPES[bSlot.type] || MODULE_TYPES['none'];
+                        const bqMult = (QUALITY_TIERS[bSlot.quality] || QUALITY_TIERS['Normal']).moduleMult;
+                        singleBeaconSpeed += (bModDef.speed * bqMult);
+                        singleBeaconEnergy += (bModDef.energy);
+                    }
+                });
+
+                for (let i = 0; i < cfg.beaconCount; i++) {
+                    const weight = i < beaconDef.profile.length ? beaconDef.profile[i] : 0.05;
+                    totalBeaconSpeedMod += singleBeaconSpeed * weight;
+                    totalBeaconEnergyMod += singleBeaconEnergy * weight;
+                }
+            }
+
+            const baseCraftingSpeed = machineStats.speed * qualityStats.speedMult;
+            const combinedSpeedMod = totalMachineSpeedMod + totalBeaconSpeedMod;
+            const finalCraftingSpeed = Math.max(0.2, baseCraftingSpeed * (1 + combinedSpeedMod));
+            const finalProdMultiplier = 1 + Math.max(0, totalProd);
+
+            const combinedEnergyMod = totalMachineEnergyMod + totalBeaconEnergyMod;
+            const energyFactor = Math.max(0.2, 1 + combinedEnergyMod);
+
+            const itemsPerSecPerMachine = (recipe.yield * finalProdMultiplier * finalCraftingSpeed) / recipe.time;
+            const machinesNeeded = requiredRate / itemsPerSecPerMachine;
+
+            const totalPowerKW = machinesNeeded * machineStats.power * energyFactor;
+            const totalFootprint = machinesNeeded * machineStats.footprint;
+
+            const children = [];
+            for (const [ingName, ingQty] of Object.entries(recipe.ingredients)) {
+                const ingRatePerSec = (machinesNeeded * ingQty) / recipe.time;
+                children.push(buildSolverTree(ingName, ingRatePerSec, qualityTier));
+            }
+
+            return {
+                itemName,
+                requiredRate,
+                isRaw: false,
+                recipe,
+                cfg,
+                machineStats,
+                machinesNeeded,
+                finalCraftingSpeed,
+                finalProdMultiplier,
+                totalQualityMod,
+                totalPowerKW,
+                totalFootprint,
+                children
+            };
+        }
+
+        function renderTreeNode(node, container, totals) {
+            const isRoot = container.id === 'production-tree';
+            const card = document.createElement('div');
+            card.className = `rounded-xl border border-factorio-border p-4 bg-factorio-panel ${!isRoot ? 'ml-4 md:ml-6 mt-3 border-l-4 border-l-factorio-orange' : ''}`;
+
+            if (node.isRaw) {
+                const rate = window.currentUnit === 'min' ? node.requiredRate * 60 : node.requiredRate;
+                totals.rawInputs[node.itemName] = (totals.rawInputs[node.itemName] || 0) + rate;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="font-bold text-gray-300 flex items-center gap-2">
+                            <i class="fa-solid fa-cube text-gray-500"></i> ${node.itemName} <span class="text-xs font-normal text-amber-500/80">(Raw Resource)</span>
+                        </span>
+                        <span class="font-mono text-factorio-orange font-semibold">${rate.toFixed(2)} ${window.currentUnit === 'sec' ? '/s' : '/m'}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+                return;
+            }
+
+            const mName = node.machineStats.name;
+            if (!totals.machines[mName]) {
+                totals.machines[mName] = { count: 0, power: 0 };
+            }
+            totals.machines[mName].count += node.machinesNeeded;
+            totals.machines[mName].power += node.totalPowerKW;
+            totals.totalPowerKW += node.totalPowerKW;
+            totals.totalFootprint += node.totalFootprint;
+            totals.totalMachineCount += node.machinesNeeded;
+
+            const displayRate = window.currentUnit === 'min' ? node.requiredRate * 60 : node.requiredRate;
+
+            let machineSlotsHtml = '';
+            if (node.machineStats.slots > 0) {
+                machineSlotsHtml += `<div class="col-span-full mt-2 pt-2 border-t border-factorio-border/50">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-xs font-semibold text-factorio-orange uppercase tracking-wider">Machine Modules (${node.machineStats.slots} slots)</span>
+                        <div class="flex gap-1">
+                            <button onclick="fillAllMachineSlots('${node.itemName}', 'prod-3', 'Normal')" class="text-[10px] bg-factorio-dark hover:bg-factorio-border px-1.5 py-0.5 rounded text-gray-300">All Prod 3</button>
+                            <button onclick="fillAllMachineSlots('${node.itemName}', 'speed-3', 'Normal')" class="text-[10px] bg-factorio-dark hover:bg-factorio-border px-1.5 py-0.5 rounded text-gray-300">All Speed 3</button>
+                            <button onclick="fillAllMachineSlots('${node.itemName}', 'none', 'Normal')" class="text-[10px] bg-factorio-dark hover:bg-factorio-border px-1.5 py-0.5 rounded text-gray-400">Clear</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-${Math.min(node.machineStats.slots, 4)} gap-2">`;
+
+                for (let s = 0; s < node.machineStats.slots; s++) {
+                    const slotData = node.cfg.machineSlots[s] || { type: 'none', quality: 'Normal' };
+                    machineSlotsHtml += `
+                        <div class="bg-factorio-dark p-1.5 rounded border border-factorio-border text-[11px] space-y-1">
+                            <div class="text-gray-400 font-mono">Slot ${s+1}</div>
+                            <select onchange="updateSlotConfig('${node.itemName}', 'machine', ${s}, 'type', this.value)" class="w-full bg-factorio-panel text-gray-200 border border-factorio-border rounded px-1 py-0.5">
+                                ${Object.keys(MODULE_TYPES).map(m => `<option value="${m}" ${slotData.type === m ? 'selected' : ''}>${MODULE_TYPES[m].name}</option>`).join('')}
+                            </select>
+                            <select onchange="updateSlotConfig('${node.itemName}', 'machine', ${s}, 'quality', this.value)" class="w-full bg-factorio-panel text-gray-200 border border-factorio-border rounded px-1 py-0.5">
+                                ${Object.keys(QUALITY_TIERS).map(q => `<option value="${q}" ${slotData.quality === q ? 'selected' : ''}>${q}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+                }
+                machineSlotsHtml += `</div></div>`;
+            }
+
+            let beaconSlotsHtml = '';
+            if (node.cfg.beacon !== 'none' && node.cfg.beaconCount > 0) {
+                beaconSlotsHtml += `<div class="col-span-full mt-2 pt-2 border-t border-factorio-border/50">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-xs font-semibold text-factorio-orange uppercase tracking-wider">Beacon Modules (2 slots per beacon)</span>
+                        <div class="flex gap-1">
+                            <button onclick="fillAllBeaconSlots('${node.itemName}', 'speed-3', 'Normal')" class="text-[10px] bg-factorio-dark hover:bg-factorio-border px-1.5 py-0.5 rounded text-gray-300">All Speed 3</button>
+                            <button onclick="fillAllBeaconSlots('${node.itemName}', 'none', 'Normal')" class="text-[10px] bg-factorio-dark hover:bg-factorio-border px-1.5 py-0.5 rounded text-gray-400">Clear</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">`;
+
+                for (let bs = 0; bs < 2; bs++) {
+                    const bSlotData = node.cfg.beaconSlots[bs] || { type: 'speed-3', quality: 'Normal' };
+                    beaconSlotsHtml += `
+                        <div class="bg-factorio-dark p-1.5 rounded border border-factorio-border text-[11px] space-y-1">
+                            <div class="text-gray-400 font-mono">Beacon Slot ${bs+1}</div>
+                            <select onchange="updateSlotConfig('${node.itemName}', 'beacon', ${bs}, 'type', this.value)" class="w-full bg-factorio-panel text-gray-200 border border-factorio-border rounded px-1 py-0.5">
+                                ${Object.keys(MODULE_TYPES).map(m => `<option value="${m}" ${MODULE_TYPES[m].prod > 0 ? 'disabled' : ''} ${bSlotData.type === m ? 'selected' : ''}>${MODULE_TYPES[m].name} ${MODULE_TYPES[m].prod > 0 ? '(N/A)' : ''}</option>`).join('')}
+                            </select>
+                            <select onchange="updateSlotConfig('${node.itemName}', 'beacon', ${bs}, 'quality', this.value)" class="w-full bg-factorio-panel text-gray-200 border border-factorio-border rounded px-1 py-0.5">
+                                ${Object.keys(QUALITY_TIERS).map(q => `<option value="${q}" ${bSlotData.quality === q ? 'selected' : ''}>${q}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+                }
+                beaconSlotsHtml += `</div></div>`;
+            }
+
+            card.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex flex-wrap justify-between items-center gap-2 border-b border-factorio-border pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-white text-base">${node.itemName}</span>
+                            <span class="text-xs bg-factorio-dark border border-factorio-border text-gray-400 px-2 py-0.5 rounded">
+                                ${node.machinesNeeded.toFixed(2)}x ${node.machineStats.name}
+                            </span>
+                        </div>
+                        <div class="text-sm font-mono text-factorio-orange font-bold">
+                            ${displayRate.toFixed(2)} ${window.currentUnit === 'sec' ? 'items/s' : 'items/min'}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs bg-factorio-dark p-3 rounded-lg border border-factorio-border">
+                        <div>
+                            <label class="text-gray-400 block mb-1 font-medium">Assembling Machine Type</label>
+                            <select onchange="changeMachineType('${node.itemName}', this.value)" class="w-full bg-factorio-panel border border-factorio-border text-gray-200 rounded px-2 py-1">
+                                ${Object.keys(MACHINES).map(mk => `<option value="${mk}" ${node.cfg.machine === mk ? 'selected' : ''}>${MACHINES[mk].name}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-gray-400 block mb-1 font-medium">Beacon Preset</label>
+                            <select onchange="updateStepConfig('${node.itemName}', 'beacon', this.value)" class="w-full bg-factorio-panel border border-factorio-border text-gray-200 rounded px-2 py-1">
+                                ${Object.keys(BEACONS).map(bk => `<option value="${bk}" ${node.cfg.beacon === bk ? 'selected' : ''}>${BEACONS[bk].name}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-gray-400 block mb-1 font-medium">Beacons Surrounding Machine</label>
+                            <input type="number" min="0" max="20" value="${node.cfg.beaconCount}" onchange="updateBeaconCount('${node.itemName}', parseInt(this.value) || 0)" class="w-full bg-factorio-panel border border-factorio-border text-gray-200 rounded px-2 py-1">
+                        </div>
+
+                        ${machineSlotsHtml}
+                        ${beaconSlotsHtml}
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 text-xs text-gray-400 pt-1">
+                        <span>Speed: <strong class="text-gray-200">${node.finalCraftingSpeed.toFixed(2)}x</strong></span>
+                        <span>Productivity: <strong class="text-green-400">+${Math.round((node.finalProdMultiplier - 1) * 100)}%</strong></span>
+                        ${node.totalQualityMod > 0 ? `<span>Quality: <strong class="text-purple-400">+${(node.totalQualityMod * 100).toFixed(1)}%</strong></span>` : ''}
+                        <span>Power: <strong class="text-amber-400">${node.totalPowerKW > 1000 ? (node.totalPowerKW/1000).toFixed(2)+' MW' : Math.round(node.totalPowerKW)+' kW'}</strong></span>
+                    </div>
+                </div>
+            `;
+
+            if (node.children && node.children.length > 0) {
+                const childContainer = document.createElement('div');
+                childContainer.className = "space-y-2 mt-2";
+                node.children.forEach(child => renderTreeNode(child, childContainer, totals));
+                card.appendChild(childContainer);
+            }
+
+            container.appendChild(card);
+        }
+
+        window.updateStepConfig = function(itemName, key, value) {
+            if (!stepConfigs[itemName]) return;
+            stepConfigs[itemName][key] = value;
+            recalculate();
+        };
+
+        window.changeMachineType = function(itemName, newMachineKey) {
+            if (!stepConfigs[itemName]) return;
+            stepConfigs[itemName].machine = newMachineKey;
+            const newSlots = MACHINES[newMachineKey].slots;
+            stepConfigs[itemName].machineSlots = createDefaultMachineSlots(newSlots, 'prod-3', 'Normal');
+            recalculate();
+        };
+
+        window.updateBeaconCount = function(itemName, count) {
+            if (!stepConfigs[itemName]) return;
+            stepConfigs[itemName].beaconCount = count;
+            if (count > 0 && stepConfigs[itemName].beacon === 'none') {
+                stepConfigs[itemName].beacon = 'beacon-sa';
+            }
+            recalculate();
+        };
+
+        window.updateSlotConfig = function(itemName, target, slotIndex, prop, value) {
+            if (!stepConfigs[itemName]) return;
+            const slotArray = target === 'machine' ? stepConfigs[itemName].machineSlots : stepConfigs[itemName].beaconSlots;
+            if (slotArray && slotArray[slotIndex]) {
+                slotArray[slotIndex][prop] = value;
+            }
+            recalculate();
+        };
+
+        window.fillAllMachineSlots = function(itemName, moduleType, quality) {
+            if (!stepConfigs[itemName]) return;
+            stepConfigs[itemName].machineSlots.forEach(slot => {
+                slot.type = moduleType;
+                slot.quality = quality;
+            });
+            recalculate();
+        };
+
+        window.fillAllBeaconSlots = function(itemName, moduleType, quality) {
+            if (!stepConfigs[itemName]) return;
+            stepConfigs[itemName].beaconSlots.forEach(slot => {
+                slot.type = moduleType;
+                slot.quality = quality;
+            });
+            recalculate();
+        };
+
+        function renderRawInputs(rawInputs) {
+            const tbody = document.getElementById('raw-inputs-table');
+            tbody.innerHTML = '';
+            
+            const keys = Object.keys(rawInputs).sort();
+            if (keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="px-3 py-4 text-center text-gray-500">No raw inputs required.</td></tr>`;
+                return;
+            }
+
+            keys.forEach(k => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-factorio-dark/50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-3 py-2 font-medium text-gray-200 flex items-center gap-2">
+                        <i class="fa-solid fa-cube text-factorio-orange text-xs"></i> ${k}
+                    </td>
+                    <td class="px-3 py-2 text-right font-mono font-bold text-amber-400">
+                        ${rawInputs[k].toFixed(2)} ${window.currentUnit === 'sec' ? '/s' : '/m'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderMachinesSummary(machines) {
+            const tbody = document.getElementById('machines-summary-table');
+            tbody.innerHTML = '';
+
+            const keys = Object.keys(machines).sort();
+            if (keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="px-3 py-4 text-center text-gray-500">No machines required.</td></tr>`;
+                return;
+            }
+
+            keys.forEach(k => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-factorio-dark/50 transition-colors";
+                const pwr = machines[k].power > 1000 ? 
+                    (machines[k].power / 1000).toFixed(2) + ' MW' : 
+                    Math.round(machines[k].power) + ' kW';
+
+                tr.innerHTML = `
+                    <td class="px-3 py-2 font-medium text-gray-200">${k}</td>
+                    <td class="px-3 py-2 text-center font-mono text-blue-400 font-bold">${machines[k].count.toFixed(1)}</td>
+                    <td class="px-3 py-2 text-right font-mono text-gray-400">${pwr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.openCustomRecipeModal = function() {
+            document.getElementById('custom-recipe-modal').classList.remove('hidden');
+        };
+
+        window.closeCustomRecipeModal = function() {
+            document.getElementById('custom-recipe-modal').classList.add('hidden');
+        };
+
+        window.saveCustomRecipe = function() {
+            const name = document.getElementById('cr-name').value.trim();
+            const time = parseFloat(document.getElementById('cr-time').value) || 1.0;
+            const yieldQty = parseInt(document.getElementById('cr-yield').value) || 1;
+            const category = document.getElementById('cr-category').value;
+            const ingStr = document.getElementById('cr-ingredients').value.trim();
+
+            if (!name) return;
+
+            const ingredients = {};
+            if (ingStr) {
+                const parts = ingStr.split(',');
+                parts.forEach(p => {
+                    const [iName, iQty] = p.split(':');
+                    if (iName && iQty) {
+                        ingredients[iName.trim()] = parseFloat(iQty.trim()) || 1;
+                    }
+                });
+            }
+
+            RECIPES[name] = {
+                time,
+                yield: yieldQty,
+                category,
+                ingredients: Object.keys(ingredients).length > 0 ? ingredients : null
+            };
+
+            populateTargetSelector();
+            document.getElementById('target-item').value = name;
+            closeCustomRecipeModal();
+            recalculate();
+        };
+    </script>
+</body>
+</html>
